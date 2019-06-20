@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "rpg",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "RPG Game in HTML5 and JS",
+  "keywords": ["RPG"],
+  "author": "Alex",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
