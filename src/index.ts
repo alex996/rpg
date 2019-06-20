@@ -24,8 +24,8 @@ window.addEventListener(
       [mapSrc, playerSrc].map(loadImage)
     )
 
-    const playerWidth = playerImg.width / 3
-    const playerHeight = playerImg.height / 4
+    const playerWidth = 60
+    const playerHeight = 80
 
     const mapWidth = mapImg.width
     const mapHeight = mapImg.height

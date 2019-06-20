@@ -12,6 +12,8 @@ class Player {
   private canvasY: number
 
   private image: HTMLImageElement
+  private spriteWidth: number
+  private spriteHeight: number
 
   public upKey = false
   public rightKey = false
@@ -53,17 +55,27 @@ class Player {
     this.canvasX = (canvasWidth - width) / 2
     this.canvasY = (canvasHeight - height) / 2
     this.image = image
+    this.spriteWidth = image.width / 3
+    this.spriteHeight = image.height / 4
   }
 
   public draw (context: CanvasRenderingContext2D): void {
-    const { width, height, image, canvasX, canvasY } = this
+    const {
+      width,
+      height,
+      image,
+      spriteWidth,
+      spriteHeight,
+      canvasX,
+      canvasY
+    } = this
 
     context.drawImage(
       image,
       image.width / 3, // offset by 33.3%
       image.height / 2, // offset by 50%
-      width,
-      height,
+      spriteWidth,
+      spriteHeight,
       canvasX,
       canvasY,
       width,
