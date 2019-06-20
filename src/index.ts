@@ -30,6 +30,9 @@ window.addEventListener(
     const mapWidth = mapImg.width
     const mapHeight = mapImg.height
 
+    const canvasWidth = canvas.width
+    const canvasHeight = canvas.height
+
     const player = new Player({
       // This is where the player will spawn in the map
       x: (mapWidth - playerWidth) / 2,
@@ -38,18 +41,19 @@ window.addEventListener(
       height: playerHeight,
       mapWidth,
       mapHeight,
-      image: playerImg,
-      canvas,
-      context
+      canvasWidth,
+      canvasHeight,
+      image: playerImg
     })
 
     const map = new TileMap({
-      player,
       width: mapWidth,
       height: mapHeight,
-      image: mapImg,
-      canvas,
-      context
+      canvasWidth,
+      canvasHeight,
+      playerX: player.x,
+      playerY: player.y,
+      image: mapImg
     })
 
     document.addEventListener('keydown', (e: KeyboardEvent): void => {
@@ -89,12 +93,12 @@ window.addEventListener(
       if (player.isMoving) {
         player.move()
 
-        map.shift()
+        map.onPlayerMove(player.x, player.y)
       }
 
-      map.draw()
+      map.draw(context)
 
-      player.draw()
+      player.draw(context)
     }
 
     requestAnimationFrame(main)
