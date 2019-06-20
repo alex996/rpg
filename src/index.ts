@@ -1,6 +1,6 @@
 import './index.scss'
-import mapSrc from './images/map.jpg'
-import playerSrc from './images/player.png'
+import { mapSrc, playerSrc } from './images'
+import { Player, TileMap } from './entities'
 
 const loadImage = (path: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject): void => {
@@ -24,34 +24,38 @@ window.addEventListener(
       [mapSrc, playerSrc].map(loadImage)
     )
 
+    const playerWidth = playerImg.width / 3
+    const playerHeight = playerImg.height / 4
+
+    const player = new Player({
+      // This is where the player will spawn in the map
+      x: (mapImg.width - playerWidth) / 2,
+      y: (mapImg.height - playerHeight) / 2,
+      width: playerWidth,
+      height: playerHeight,
+      image: playerImg,
+      canvas,
+      context
+    })
+
+    const map = new TileMap({
+      playerX: player.x,
+      playerY: player.y,
+      width: mapImg.width,
+      height: mapImg.height,
+      image: mapImg,
+      canvas,
+      context
+    })
+
     const main = (): void => {
       requestAnimationFrame(main)
 
       context.clearRect(0, 0, canvas.width, canvas.height)
 
-      context.drawImage(
-        mapImg,
-        0,
-        0,
-        canvas.width,
-        canvas.height,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      )
+      map.draw()
 
-      context.drawImage(
-        playerImg,
-        playerImg.width / 3, // offset by 33.3%
-        playerImg.height / 2, // offset by 50%
-        playerImg.width / 3,
-        playerImg.height / 4,
-        0,
-        0,
-        playerImg.width / 3,
-        playerImg.height / 4
-      )
+      player.draw()
     }
 
     requestAnimationFrame(main)
