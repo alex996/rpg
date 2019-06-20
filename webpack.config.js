@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 
 module.exports = (env, { mode }) => {
   const inDev = mode === 'development'
@@ -18,6 +19,10 @@ module.exports = (env, { mode }) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: 'index.html'
+      }),
+      new ScriptExtHtmlWebpackPlugin({
+        // Download .js file during HTML parsing and only execute it after the parser is done
+        defaultAttribute: 'defer'
       })
     ]
   }
