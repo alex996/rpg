@@ -27,12 +27,17 @@ window.addEventListener(
     const playerWidth = playerImg.width / 3
     const playerHeight = playerImg.height / 4
 
+    const mapWidth = mapImg.width
+    const mapHeight = mapImg.height
+
     const player = new Player({
       // This is where the player will spawn in the map
-      x: (mapImg.width - playerWidth) / 2,
-      y: (mapImg.height - playerHeight) / 2,
+      x: (mapWidth - playerWidth) / 2,
+      y: (mapHeight - playerHeight) / 2,
       width: playerWidth,
       height: playerHeight,
+      mapWidth,
+      mapHeight,
       image: playerImg,
       canvas,
       context
@@ -40,8 +45,8 @@ window.addEventListener(
 
     const map = new TileMap({
       player,
-      width: mapImg.width,
-      height: mapImg.height,
+      width: mapWidth,
+      height: mapHeight,
       image: mapImg,
       canvas,
       context

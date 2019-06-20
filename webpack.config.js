@@ -32,7 +32,10 @@ module.exports = (env, { mode }) => {
           test: /\.(png|jpe?g)$/,
           use: [
             {
-              loader: 'file-loader'
+              loader: 'file-loader',
+              options: {
+                name: inDev ? '[name].[ext]' : '[name].[hash].[ext]'
+              }
             }
           ]
         }
