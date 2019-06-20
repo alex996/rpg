@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = (env, { mode }) => {
   const inDev = mode === 'development'
@@ -14,7 +15,19 @@ module.exports = (env, { mode }) => {
       extensions: ['.ts', '.js']
     },
     module: {
-      rules: [{ test: /\.ts$/, loader: 'ts-loader', exclude: /node_modules/ }]
+      rules: [
+        { test: /\.ts$/, loader: 'ts-loader', exclude: /node_modules/ },
+        {
+          test: /\.scss$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader
+            },
+            'css-loader',
+            'sass-loader'
+          ]
+        }
+      ]
     },
     plugins: [
       new HtmlWebpackPlugin({
@@ -23,6 +36,12 @@ module.exports = (env, { mode }) => {
       new ScriptExtHtmlWebpackPlugin({
         // Download .js file during HTML parsing and only execute it after the parser is done
         defaultAttribute: 'defer'
+      }),
+      new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
+        filename: inDev ? '[name].css' : '[name].[hash].css',
+        chunkFilename: inDev ? '[id].css' : '[id].[hash].css'
       })
     ]
   }
