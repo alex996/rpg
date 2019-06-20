@@ -7,6 +7,7 @@ module.exports = (env, { mode }) => {
   const inDev = mode === 'development'
 
   return {
+    // For dev, use a fast source map at the cost of bundle size
     devtool: inDev ? 'cheap-module-eval-source-map' : 'source-map',
     output: {
       filename: inDev ? '[name].js' : '[name].[contenthash].js'
@@ -26,6 +27,14 @@ module.exports = (env, { mode }) => {
             'css-loader',
             'sass-loader'
           ]
+        },
+        {
+          test: /\.(png|jpe?g)$/,
+          use: [
+            {
+              loader: 'file-loader'
+            }
+          ]
         }
       ]
     },
@@ -38,8 +47,6 @@ module.exports = (env, { mode }) => {
         defaultAttribute: 'defer'
       }),
       new MiniCssExtractPlugin({
-        // Options similar to the same options in webpackOptions.output
-        // both options are optional
         filename: inDev ? '[name].css' : '[name].[hash].css',
         chunkFilename: inDev ? '[id].css' : '[id].[hash].css'
       })
