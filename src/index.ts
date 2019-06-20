@@ -39,8 +39,7 @@ window.addEventListener(
     })
 
     const map = new TileMap({
-      playerX: player.x,
-      playerY: player.y,
+      player,
       width: mapImg.width,
       height: mapImg.height,
       image: mapImg,
@@ -48,10 +47,45 @@ window.addEventListener(
       context
     })
 
+    document.addEventListener('keydown', (e: KeyboardEvent): void => {
+      const { key } = e
+
+      // Gets invoked repeatedly, hence the last AND check
+      if ((key === 'ArrowUp' || key === 'w') && !player.upKey) {
+        player.upKey = true
+      } else if ((key === 'ArrowRight' || key === 'd') && !player.rightKey) {
+        player.rightKey = true
+      } else if ((key === 'ArrowDown' || key === 's') && !player.downKey) {
+        player.downKey = true
+      } else if ((key === 'ArrowLeft' || key === 'a') && !player.leftKey) {
+        player.leftKey = true
+      }
+    })
+
+    document.addEventListener('keyup', (e: KeyboardEvent): void => {
+      const { key } = e
+
+      if (key === 'ArrowUp' || key === 'w') {
+        player.upKey = false
+      } else if (key === 'ArrowRight' || key === 'd') {
+        player.rightKey = false
+      } else if (key === 'ArrowDown' || key === 's') {
+        player.downKey = false
+      } else if (key === 'ArrowLeft' || key === 'a') {
+        player.leftKey = false
+      }
+    })
+
     const main = (): void => {
       requestAnimationFrame(main)
 
       context.clearRect(0, 0, canvas.width, canvas.height)
+
+      if (player.isMoving) {
+        player.move()
+
+        map.shift()
+      }
 
       map.draw()
 

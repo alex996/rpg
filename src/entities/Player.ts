@@ -7,6 +7,13 @@ class Player {
   public height: number
   private image: HTMLImageElement
   private context: CanvasRenderingContext2D
+  public upKey = false
+  public rightKey = false
+  public downKey = false
+  public leftKey = false
+
+  private static dx = 3
+  private static dy = 3
 
   public constructor ({
     x,
@@ -51,6 +58,27 @@ class Player {
       width,
       height
     )
+  }
+
+  public get isMoving (): boolean {
+    return this.upKey || this.rightKey || this.downKey || this.leftKey
+  }
+
+  public move (): void {
+    const { dx, dy } = Player
+
+    if (this.upKey) {
+      this.y -= dy
+    }
+    if (this.rightKey) {
+      this.x += dx
+    }
+    if (this.downKey) {
+      this.y += dy
+    }
+    if (this.leftKey) {
+      this.x -= dx
+    }
   }
 }
 
