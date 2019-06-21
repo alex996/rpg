@@ -30,8 +30,9 @@ class TileMap {
     playerY: number
     image: HTMLImageElement
   }) {
-    this.x = playerX - canvasWidth / 2
-    this.y = playerY - canvasHeight / 2
+    // This is where the snapshot of the map will be cropped from
+    this.x = playerX - canvasWidth / 2 // [0, width - canvasWidth]
+    this.y = playerY - canvasHeight / 2 // [0, height - canvasHeight]
     this.width = width
     this.height = height
     this.canvasWidth = canvasWidth
@@ -62,8 +63,18 @@ class TileMap {
   }
 
   private shift (): void {
-    this.x = this.playerX - this.canvasWidth / 2
-    this.y = this.playerY - this.canvasHeight / 2
+    const { width, height, playerX, playerY, canvasWidth, canvasHeight } = this
+
+    const x = playerX - canvasWidth / 2
+    const y = playerY - canvasHeight / 2
+
+    if (x >= 0 && x <= width - canvasWidth) {
+      this.x = playerX - canvasWidth / 2
+    }
+
+    if (y >= 0 && y <= height - canvasHeight) {
+      this.y = playerY - canvasHeight / 2
+    }
   }
 }
 
