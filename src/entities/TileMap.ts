@@ -30,9 +30,6 @@ class TileMap {
     playerY: number
     image: HTMLImageElement
   }) {
-    // This is where the snapshot of the map will be cropped from
-    this.x = playerX - canvasWidth / 2 // [0, width - canvasWidth]
-    this.y = playerY - canvasHeight / 2 // [0, height - canvasHeight]
     this.width = width
     this.height = height
     this.canvasWidth = canvasWidth
@@ -40,6 +37,8 @@ class TileMap {
     this.playerX = playerX
     this.playerY = playerY
     this.image = image
+    this.x = this.getX()
+    this.y = this.getY()
   }
 
   public draw (context: CanvasRenderingContext2D): void {
@@ -52,28 +51,45 @@ class TileMap {
     this.playerX = playerX
     this.playerY = playerY
 
-    this.shift()
+    this.syncXAndY()
   }
 
   public onCanvasResize (canvasWidth: number, canvasHeight: number): void {
     this.canvasWidth = canvasWidth
     this.canvasHeight = canvasHeight
 
-    this.shift()
+    this.syncXAndY()
   }
 
-  private shift (): void {
-    const { width, height, playerX, playerY, canvasWidth, canvasHeight } = this
+  private syncXAndY (): void {
+    this.x = this.getX()
+    this.y = this.getY()
+  }
 
-    const x = playerX - canvasWidth / 2
-    const y = playerY - canvasHeight / 2
+  private getX (): number {
+    return TileMap.getXOrY(this.width, this.playerX, this.canvasWidth)
+  }
 
-    if (x >= 0 && x <= width - canvasWidth) {
-      this.x = playerX - canvasWidth / 2
-    }
+  private getY (): number {
+    return TileMap.getXOrY(this.height, this.playerY, this.canvasHeight)
+  }
 
-    if (y >= 0 && y <= height - canvasHeight) {
-      this.y = playerY - canvasHeight / 2
+  // Returns x in [0, width - canvasWidth] or y in [0, height - canvasHeight]
+  private static getXOrY (
+    widthOrHeight: number,
+    playerXorY: number,
+    canvasWidthOrHeight: number
+  ): number {
+    const min = 0
+    const max = widthOrHeight - canvasWidthOrHeight
+    const xOrY = playerXorY - canvasWidthOrHeight / 2
+
+    if (xOrY < min) {
+      return min
+    } else if (xOrY > max) {
+      return max
+    } else {
+      return xOrY
     }
   }
 }
