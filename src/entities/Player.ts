@@ -152,6 +152,7 @@ class Player {
     )
   }
 
+  // Returns x in [0, canvasWidth - width] or y in [0, canvasHeight - height]
   private static getCanvasXOrY (
     xOrY: number,
     widthOrHeight: number,
