@@ -18,14 +18,18 @@ class Game {
   public constructor ({ canvas }: { canvas: HTMLCanvasElement }) {
     this.canvas = canvas
     this.context = canvas.getContext('2d') as CanvasRenderingContext2D
+    this.context.imageSmoothingEnabled = false // retain pixel sharpness
+
     this.images = new Images([tilesSrc])
     this.map = new MapArea({
       tilemap: new Tilemap(field),
       spritesheet: this.images.cache[tilesSrc]
     })
+
     // Make canvas full-screen except when the map is smaller than the viewport
     canvas.width = Math.min(window.innerWidth, this.map.width)
     canvas.height = Math.min(window.innerHeight, this.map.height)
+
     this.player = new Player({ x: 60, y: 80, width: 60, height: 80 })
     this.camera = new Camera({
       canvasWidth: canvas.width,

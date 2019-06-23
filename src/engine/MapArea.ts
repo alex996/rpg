@@ -44,7 +44,9 @@ class MapArea {
     const canvas = document.createElement('canvas')
     canvas.width = width
     canvas.height = height
+
     const context = canvas.getContext('2d') as CanvasRenderingContext2D
+    context.imageSmoothingEnabled = false // retain pixel sharpness
 
     const { columns, rows, tileSize } = tilemap
     const columnsInAtlas = spritesheet.width / tileSize
