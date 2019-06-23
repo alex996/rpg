@@ -12,9 +12,8 @@ class Game {
   private camera: Camera
   private controls: Controls
 
-  private nowMs: number = 0 // current timestamp in ms
-  private lastMs: number = 0 // last frame in ms
-  private diffSec: number = 0 // time between frames in sec
+  private lastMs: number = 0 // timestamp of the last frame in ms
+  private diffSec: number = 0 // seconds between current and last frames
 
   public constructor ({ canvas }: { canvas: HTMLCanvasElement }) {
     this.canvas = canvas
@@ -56,9 +55,8 @@ class Game {
   private loop = (ms: number): void => {
     requestAnimationFrame(this.loop)
 
-    this.lastMs = this.nowMs
-    this.nowMs = ms
-    this.diffSec = (this.nowMs - this.lastMs) / 1000
+    this.diffSec = (ms - this.lastMs) / 1000
+    this.lastMs = ms
 
     this.update()
 
