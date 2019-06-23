@@ -13,7 +13,7 @@ module.exports = (env, { mode }) => {
       filename: inDev ? '[name].js' : '[name].[contenthash].js'
     },
     resolve: {
-      extensions: ['.ts', '.js']
+      extensions: ['.ts', '.js', '.json']
     },
     module: {
       rules: [

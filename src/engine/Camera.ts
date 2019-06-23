@@ -21,8 +21,8 @@ class Camera {
     mapWidth,
     mapHeight
   }: {
-    x: number
-    y: number
+    x?: number
+    y?: number
     canvasWidth: number
     canvasHeight: number
     mapWidth: number
