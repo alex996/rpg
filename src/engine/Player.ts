@@ -1,4 +1,4 @@
-import { Controls } from '.'
+import { Controls, MapArea, Camera } from '.'
 
 class Player {
   public x: number
@@ -26,6 +26,7 @@ class Player {
     height: number
   }) {
     // Player position in the map, not canvas
+    // minus the half of player width/height
     this.x = x
     this.y = y
     // Move speed in px per second
@@ -37,9 +38,8 @@ class Player {
 
   public update (
     controls: Controls,
-    secondsPassed: number, // time between frames in seconds
-    mapWidth: number,
-    mapHeight: number
+    map: MapArea,
+    secondsPassed: number // time between frames in seconds
   ): void {
     // Move the player when keys are pressed
     if (controls.upKey) {
@@ -62,25 +62,21 @@ class Player {
     if (this.y - this.height / 2 < 0) {
       this.y = this.height / 2
     }
-    if (this.x + this.width / 2 > mapWidth) {
-      this.x = mapWidth - this.width / 2
+    if (this.x + this.width / 2 > map.width) {
+      this.x = map.width - this.width / 2
     }
-    if (this.y + this.height / 2 > mapHeight) {
-      this.y = mapHeight - this.height / 2
+    if (this.y + this.height / 2 > map.height) {
+      this.y = map.height - this.height / 2
     }
   }
 
-  public draw (
-    context: CanvasRenderingContext2D,
-    cameraX: number,
-    cameraY: number
-  ): void {
+  public draw (context: CanvasRenderingContext2D, camera: Camera): void {
     context.save()
     context.fillStyle = '#000'
     context.fillRect(
       // Convert player's map position to canvas position
-      this.x - this.width / 2 - cameraX,
-      this.y - this.height / 2 - cameraY,
+      this.x - this.width / 2 - camera.x,
+      this.y - this.height / 2 - camera.y,
       this.width,
       this.height
     )

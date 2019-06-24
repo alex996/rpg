@@ -1,11 +1,21 @@
+interface VisualGrid {
+  top: [number]
+  middle: [number]
+  bottom: [number]
+}
+
+interface LogicGrid {
+  [key: string]: boolean
+}
+
 class Tilemap {
   public columns: number // width in columns
   public rows: number // height in rows
 
   public tileSize: number
 
-  public visualGrid: { top: [number]; bottom: [number] }
-  public logicGrid: [number]
+  public visualGrid: VisualGrid
+  public logicGrid: LogicGrid
 
   private static TILE_SIZE = 32
 
@@ -19,14 +29,18 @@ class Tilemap {
     columns: number
     rows: number
     tileSize: number
-    visualGrid: { top: [number]; bottom: [number] }
+    visualGrid: VisualGrid
     logicGrid: [number]
   }) {
     this.columns = columns
     this.rows = rows
     this.tileSize = tileSize
     this.visualGrid = visualGrid
-    this.logicGrid = logicGrid
+    // Covert array to hash table for faster lookup
+    this.logicGrid = logicGrid.reduce(
+      (grid, number): object => ({ ...grid, [number]: true }),
+      {}
+    )
   }
 
   public getTileIndex (column: number, row: number): number {

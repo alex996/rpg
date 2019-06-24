@@ -43,7 +43,7 @@ class Game {
   public async play (): Promise<void> {
     await this.images.download()
 
-    this.map.generate()
+    await this.map.generate()
 
     this.camera.follow(
       this.player,
@@ -68,12 +68,7 @@ class Game {
   }
 
   private update (): void {
-    this.player.update(
-      this.controls,
-      this.diffSec,
-      this.map.width,
-      this.map.height
-    )
+    this.player.update(this.controls, this.map, this.diffSec)
 
     this.camera.update()
   }
@@ -81,11 +76,13 @@ class Game {
   private draw (): void {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-    this.map.drawBottom(this.context, this.camera.x, this.camera.y)
+    this.map.drawBottom(this.context, this.camera) // ground walkable layer
 
-    this.player.draw(this.context, this.camera.x, this.camera.y)
+    this.map.drawMiddle(this.context, this.camera) // object non-walkable layer
 
-    this.map.drawTop(this.context, this.camera.x, this.camera.y)
+    this.player.draw(this.context, this.camera)
+
+    this.map.drawTop(this.context, this.camera) // aerial walkable layer
   }
 }
 

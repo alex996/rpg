@@ -1,4 +1,4 @@
-import { Tilemap } from '.'
+import { Tilemap, Camera } from '.'
 
 class MapArea {
   public width: number
@@ -8,6 +8,7 @@ class MapArea {
   private spritesheet: HTMLImageElement
 
   private bottom?: HTMLImageElement
+  private middle?: HTMLImageElement
   private top?: HTMLImageElement
 
   private static TILE_SIZE = 64
@@ -25,20 +26,36 @@ class MapArea {
     this.height = this.tilemap.rows * MapArea.TILE_SIZE
   }
 
-  public generate (): void {
-    this.generateBottom()
-    this.generateTop()
+  public async generate (): Promise<void> {
+    const [bottom, middle, top] = await Promise.all([
+      this.generateBottom(),
+      this.generateMiddle(),
+      this.generateTop()
+    ])
+
+    // Save the generated maps as image layers
+    this.bottom = bottom
+    this.middle = middle
+    this.top = top
   }
 
-  private generateBottom (): void {
-    this.bottom = this.generateLayer(this.tilemap.visualGrid.bottom)
+  private generateBottom (): Promise<HTMLImageElement> {
+    return this.generateLayer(this.tilemap.visualGrid.bottom)
   }
 
-  private generateTop (): void {
-    this.top = this.generateLayer(this.tilemap.visualGrid.top, true)
+  private generateMiddle (): Promise<HTMLImageElement> {
+    return this.generateLayer(this.tilemap.visualGrid.middle, true)
   }
 
-  private generateLayer (grid: [number], transparent = false): HTMLImageElement {
+  private generateTop (): Promise<HTMLImageElement> {
+    return this.generateLayer(this.tilemap.visualGrid.top, true, 0.7)
+  }
+
+  private generateLayer (
+    grid: [number],
+    transparent = false,
+    opacity?: number
+  ): Promise<HTMLImageElement> {
     const { width, height, spritesheet, tilemap } = this
 
     const canvas = document.createElement('canvas')
@@ -47,6 +64,9 @@ class MapArea {
 
     const context = canvas.getContext('2d') as CanvasRenderingContext2D
     context.imageSmoothingEnabled = false // retain pixel sharpness
+    if (opacity) {
+      context.globalAlpha = opacity
+    }
 
     const { columns, rows, tileSize } = tilemap
     const columnsInAtlas = spritesheet.width / tileSize
@@ -80,26 +100,33 @@ class MapArea {
       }
     }
 
-    // Save the generated map as this image texture
-    const image = new Image()
-    image.src = canvas.toDataURL(transparent ? 'image/png' : 'image/jpeg')
-    return image
+    // toBlob instead of toDataURL for better perf https://stackoverflow.com/a/34924715
+    return new Promise((resolve): void => {
+      canvas.toBlob(
+        (blob): void => {
+          const image = new Image()
+          const url = URL.createObjectURL(blob)
+
+          image.src = url
+          image.onload = (): void => URL.revokeObjectURL(url)
+
+          resolve(image)
+        },
+        transparent ? 'image/png' : 'image/jpeg'
+      )
+    })
   }
 
-  public drawTop (
-    context: CanvasRenderingContext2D,
-    cameraX: number,
-    cameraY: number
-  ): void {
-    this.draw(this.top as HTMLImageElement, context, cameraX, cameraY)
+  public drawBottom (context: CanvasRenderingContext2D, camera: Camera): void {
+    this.draw(this.bottom as HTMLImageElement, context, camera.x, camera.y)
   }
 
-  public drawBottom (
-    context: CanvasRenderingContext2D,
-    cameraX: number,
-    cameraY: number
-  ): void {
-    this.draw(this.bottom as HTMLImageElement, context, cameraX, cameraY)
+  public drawMiddle (context: CanvasRenderingContext2D, camera: Camera): void {
+    this.draw(this.middle as HTMLImageElement, context, camera.x, camera.y)
+  }
+
+  public drawTop (context: CanvasRenderingContext2D, camera: Camera): void {
+    this.draw(this.top as HTMLImageElement, context, camera.x, camera.y)
   }
 
   private draw (
