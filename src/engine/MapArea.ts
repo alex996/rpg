@@ -159,6 +159,40 @@ class MapArea {
 
     context.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
   }
+
+  public getColumnAt (x: number): number {
+    return Math.trunc(x / MapArea.TILE_SIZE)
+  }
+
+  public getRowAt (y: number): number {
+    return Math.trunc(y / MapArea.TILE_SIZE)
+  }
+
+  public getXOf (column: number): number {
+    return column * MapArea.TILE_SIZE
+  }
+
+  public getYOf (row: number): number {
+    return row * MapArea.TILE_SIZE
+  }
+
+  public isSolidTile (column: number, row: number): boolean {
+    const { tilemap } = this
+
+    if (
+      column > -1 &&
+      column < tilemap.columns &&
+      row > -1 &&
+      row < tilemap.rows
+    ) {
+      const grid = tilemap.visualGrid.middle
+      const tileIndex = grid[tilemap.getTileIndex(column, row)]
+
+      return tileIndex !== -1 && tilemap.logicGrid[tileIndex]
+    }
+
+    return false
+  }
 }
 
 export default MapArea

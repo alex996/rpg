@@ -13,14 +13,11 @@ class Controls {
 
       if (key === 'ArrowUp' || key === 'w') {
         this.upKey = true
-      }
-      if (key === 'ArrowRight' || key === 'd') {
+      } else if (key === 'ArrowRight' || key === 'd') {
         this.rightKey = true
-      }
-      if (key === 'ArrowDown' || key === 's') {
+      } else if (key === 'ArrowDown' || key === 's') {
         this.downKey = true
-      }
-      if (key === 'ArrowLeft' || key === 'a') {
+      } else if (key === 'ArrowLeft' || key === 'a') {
         this.leftKey = true
       }
     })
@@ -30,14 +27,11 @@ class Controls {
 
       if (key === 'ArrowUp' || key === 'w') {
         this.upKey = false
-      }
-      if (key === 'ArrowRight' || key === 'd') {
+      } else if (key === 'ArrowRight' || key === 'd') {
         this.rightKey = false
-      }
-      if (key === 'ArrowDown' || key === 's') {
+      } else if (key === 'ArrowDown' || key === 's') {
         this.downKey = false
-      }
-      if (key === 'ArrowLeft' || key === 'a') {
+      } else if (key === 'ArrowLeft' || key === 'a') {
         this.leftKey = false
       }
     })
